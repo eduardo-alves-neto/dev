@@ -1,0 +1,1 @@
+export const initialValues =[12,20,10,1];
