@@ -1,30 +1,27 @@
-// Column.tsx
+// Coluna.tsx
+import { Box, Typography, Paper, Button } from "@mui/material";
 import { Droppable } from "@hello-pangea/dnd";
-import { Box, Typography, Paper } from "@mui/material";
-import Task from "./Task";
+import { IItem } from "./Kanban";
+import { Task } from "./Task";
 
-interface ColumnProps {
+interface IColumnProps {
   title: string;
-  tasks: string[];
-  setTasks?: (tasks: string[]) => void;
   id: string;
+  items: IItem[];
 }
 
-export const Column: React.FC<ColumnProps> = ({
-  title,
-  tasks,
-  setTasks,
-  id,
-}) => {
+export const Column: React.FC<IColumnProps> = ({ title, id, items }) => {
   const getListStyle = (isDraggingOver: boolean) => ({
-    background: isDraggingOver ? "lightblue" : "lightgrey",
+    // background: isDraggingOver ? "lightblue" : "lightgrey",
     padding: 2,
-    width: 250,
-    minHeight: 300,
+    width: 300,
+    minHeight: 400,
+    maxHeight: "70vh",
+    overflow: "auto",
   });
 
   return (
-    <Box sx={{ width: 300 }}>
+    <Box sx={{ width: 350, margin: 2 }} key={id}>
       <Typography variant="h6" gutterBottom component="div">
         {title}
       </Typography>
@@ -36,13 +33,15 @@ export const Column: React.FC<ColumnProps> = ({
             ref={provided.innerRef}
             style={getListStyle(snapshot.isDraggingOver)}
           >
-            {tasks.map((task, index) => (
-              <Task key={task} id={task} index={index} title={task} />
+            {/* Tarefas */}
+            {items.map((task, index) => (
+              <Task key={task.id} task={task} index={index} />
             ))}
             {provided.placeholder}
           </Paper>
         )}
       </Droppable>
+      <Button>add+</Button>
     </Box>
   );
 };
