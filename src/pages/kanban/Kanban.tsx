@@ -3,42 +3,55 @@ import { Box, Typography } from "@mui/material";
 import { DragDropContext, DraggableLocation } from "@hello-pangea/dnd";
 import { useState } from "react";
 import { Column } from "./Colunm";
-
-export interface IItem {
-  id: string;
-  content: string;
-  title: string;
-}
-
-interface IColumns {
-  title: string;
-  id: string;
-  items: IItem[];
-}
+import { KanbanServices } from "./services/index";
+import { IColumns, IItem } from "./types";
+import { useQuery } from "@tanstack/react-query";
+import { enqueueSnackbar } from "notistack";
 
 export const Kanban: React.FC = () => {
-  const initialItems: IItem[] = [
-    { id: "1", content: "conteudo 1", title: "TArefa1" },
-    { id: "2", content: "conteudo 2", title: "TArefa1" },
-    { id: "3", content: "conteudo 3", title: "TArefa1" },
-    { id: "4", content: "conteudo 1", title: "TArefa1" },
-    { id: "5", content: "conteudo 2", title: "TArefa1" },
-    { id: "6", content: "conteudo 3", title: "TArefa1" },
-  ];
-  const initialColumns: IColumns[] = [
-    {
-      title: "Teste",
-      id: "1",
-      items: initialItems,
-    },
-    {
-      title: "Teste 2",
-      id: "2",
-      items: [],
-    },
-  ];
+  const [columns, setColumns] = useState<IColumns[]>([]);
 
-  const [columns, setColumns] = useState<IColumns[]>(initialColumns);
+  useQuery({
+    queryKey: ["/kanban"],
+    queryFn: async () => {
+      try {
+        console.log("entrei aqui 1")
+        const fetchedColumns = await KanbanServices.getColumns();
+        const fetchedItems = await KanbanServices.getItems();
+        console.log("entrei aqui 2")
+        // Crie um objeto para mapear os itens para suas colunas
+        const columnItemMap: { [key: string]: IItem[] } = {};
+  console.log("entrei aqui 3")
+        // Inicialize cada chave do objeto com um array vazio
+        fetchedColumns.forEach((column) => {
+        
+          columnItemMap[Number(column.id)] = [];
+        });
+  console.log("entrei aqui 4")
+        // Adicione os itens à coluna correspondente
+        fetchedItems.forEach((item) => {
+          if (columnItemMap[Number(item.id)]) {
+            columnItemMap[Number(item.id)].push(item);
+          }
+        });
+        
+
+        // Agora, columnItemMap contém os itens mapeados para cada coluna
+        setColumns(
+          fetchedColumns.map((column) => ({
+            ...column,
+            items: columnItemMap[Number(column.id)],
+          }))
+        );
+        console.log("entrei aqui 5")
+       
+        // return []; 
+      } catch (error) {
+        enqueueSnackbar("Unable to obtain data", { variant: "error" });
+        return []; 
+      }
+    },
+  });
 
   const onDragEnd = (result: {
     destination: DraggableLocation | null;
@@ -47,7 +60,7 @@ export const Kanban: React.FC = () => {
   }) => {
     var sourceColumnItems: any = [];
     var draggadItem: any = [];
-    var destinationColumnItemns: any = {};
+    var destinationColumnItemns: any = [];
     var sourceColumnId = "";
     var destinationColumnId = "";
 
@@ -116,6 +129,7 @@ export const Kanban: React.FC = () => {
           }}
         >
           {/* COLUNAS */}
+          {/* {isLoading && <>carregando....</>} */}
           {columns.map((column) => (
             <Column
               key={column.id}

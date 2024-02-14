@@ -11,7 +11,7 @@ import { FerramentaDaListagem } from "../../shared/components";
 export default function products() {
   const [products, setproducts] = useState<productsTypeResponse[]>([]);
 
-  const { isLoading, refetch } = useQuery({
+  useQuery({
     queryKey: ["/products"],
     queryFn: async () => {
       try {

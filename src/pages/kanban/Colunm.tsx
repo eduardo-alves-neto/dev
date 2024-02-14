@@ -1,8 +1,8 @@
 // Coluna.tsx
 import { Box, Typography, Paper, Button } from "@mui/material";
 import { Droppable } from "@hello-pangea/dnd";
-import { IItem } from "./Kanban";
 import { Task } from "./Task";
+import { IItem } from "./types";
 
 interface IColumnProps {
   title: string;

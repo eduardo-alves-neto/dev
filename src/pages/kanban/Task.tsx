@@ -1,7 +1,7 @@
 // Tarefa.tsx
 import { Box, Typography } from "@mui/material";
 import { Draggable } from "@hello-pangea/dnd";
-import { IItem } from "./Kanban";
+import { IItem } from "./types";
 
 interface ITaskProps {
   task: IItem;
@@ -10,7 +10,7 @@ interface ITaskProps {
 
 export const Task: React.FC<ITaskProps> = ({ task, index }) => {
   return (
-    <Draggable draggableId={task.id} index={index}>
+    <Draggable draggableId={String(task.id)} index={index}>
       {(provider) => (
         <Box
           component="div"
