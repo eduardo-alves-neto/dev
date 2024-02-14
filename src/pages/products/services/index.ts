@@ -1,24 +1,23 @@
-import axios from 'axios';
-import { productsTypeRequest, productsTypeResponse } from './types';
+import { productsTypeRequest, productsTypeResponse } from "./types";
+import { Api } from "../../../shared/services/api/axios-config";
 
 export class productsTypeServices {
   static async get(): Promise<productsTypeResponse[]> {
     try {
-      const { data } = await axios.get('http://localhost:8800/products'); // Certifique-se de que este é o caminho correto para a sua API.
+      const { data } = await Api.get("/products"); // Certifique-se de que este é o caminho correto para a sua API.
       return data;
     } catch (error) {
       // Adicione um tratamento de erro adequado aqui
-      console.error('Erro na solicitação:', error);
-      throw new Error('Falha ao obter os dados do usuário'); // Customize a mensagem de erro conforme necessário
+      console.error("Erro na solicitação:", error);
+      throw new Error("Falha ao obter os dados do usuário"); // Customize a mensagem de erro conforme necessário
     }
   }
 
-  
   static async create(values: productsTypeRequest): Promise<void> {
-    await axios.post('http://localhost:8800/products', values);
+    await Api.post("/products", values);
   }
 
   static async patch(values: productsTypeRequest): Promise<void> {
-    await axios.patch('http://localhost:8800/products', values);
+    await Api.patch("/products", values);
   }
 }
