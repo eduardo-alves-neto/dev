@@ -1,16 +1,9 @@
-import { Upload } from "@mui/icons-material";
 import {
   Grid,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   TextField,
   Button,
   Box,
 } from "@mui/material";
-import { watch } from "fs";
-import { FerramentaDaListagem } from "../../../shared/components/FerramentaDaListagem/FerramentaDaListagem";
 import { LayoutBase } from "../../../shared/layouts/LayoutBase";
 import { useForm } from "react-hook-form";
 import { userTypeRequest } from "../services/types";

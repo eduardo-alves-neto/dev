@@ -12,7 +12,7 @@ interface IColumnProps {
 
 export const Column: React.FC<IColumnProps> = ({ title, id, items }) => {
   const getListStyle = (isDraggingOver: boolean) => ({
-    // background: isDraggingOver ? "lightblue" : "lightgrey",
+    background: isDraggingOver ? "lightblue" : "lightgrey",
     padding: 2,
     width: 300,
     minHeight: 400,

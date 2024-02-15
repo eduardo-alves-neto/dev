@@ -22,10 +22,10 @@ export const Task: React.FC<ITaskProps> = ({ task, index }) => {
             sx={{
               width: "90%",
               height: 100,
-              backgroundColor: "gray", // Cor de fundo mais escura
+              backgroundColor: "", 
               margin: 1,
               padding: 1,
-              borderRadius: 2, // Cantos arredondados
+              borderRadius: 2, 
             }}
           >
             <Typography sx={{ color: "yellow" }}>{task.title}</Typography>

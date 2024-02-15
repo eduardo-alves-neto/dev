@@ -17,3 +17,15 @@ export const getTasks = (_, res) => {
     return res.status(200).json(data);
   });
 };
+
+// Função para atualizar a posição de uma tarefa
+export const PatchTaskPosition = (req, res) => {
+  const { id, column_id } = req.body;
+
+  const query = `UPDATE tasks SET column_id = ${column_id} WHERE id = ${id}`;
+
+  db.query(query, (err) => {
+    if (err) return res.status(500).json(err);
+    return res.status(200).json();
+  });
+};

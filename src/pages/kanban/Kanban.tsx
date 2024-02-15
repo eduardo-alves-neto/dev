@@ -5,55 +5,51 @@ import { useState } from "react";
 import { Column } from "./Colunm";
 import { KanbanServices } from "./services/index";
 import { IColumns, IItem } from "./types";
-import { useQuery } from "@tanstack/react-query";
-import { enqueueSnackbar } from "notistack";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const Kanban: React.FC = () => {
   const [columns, setColumns] = useState<IColumns[]>([]);
 
-  useQuery({
+  const { isLoading, refetch } = useQuery({
     queryKey: ["/kanban"],
     queryFn: async () => {
       try {
-        console.log("entrei aqui 1")
         const fetchedColumns = await KanbanServices.getColumns();
         const fetchedItems = await KanbanServices.getItems();
-        console.log("entrei aqui 2")
-        // Crie um objeto para mapear os itens para suas colunas
-        const columnItemMap: { [key: string]: IItem[] } = {};
-  console.log("entrei aqui 3")
-        // Inicialize cada chave do objeto com um array vazio
-        fetchedColumns.forEach((column) => {
-        
-          columnItemMap[Number(column.id)] = [];
-        });
-  console.log("entrei aqui 4")
-        // Adicione os itens à coluna correspondente
-        fetchedItems.forEach((item) => {
-          if (columnItemMap[Number(item.id)]) {
-            columnItemMap[Number(item.id)].push(item);
-          }
-        });
-        
 
-        // Agora, columnItemMap contém os itens mapeados para cada coluna
-        setColumns(
-          fetchedColumns.map((column) => ({
-            ...column,
-            items: columnItemMap[Number(column.id)],
-          }))
-        );
-        console.log("entrei aqui 5")
-       
-        // return []; 
+        const columnItemMap = fetchedColumns.map((column) => {
+          const items = fetchedItems.filter((item) => {
+            return column.id === item.column_id;
+          });
+          return { ...column, items };
+        });
+
+        setColumns(columnItemMap);
+        return columnItemMap;
       } catch (error) {
-        enqueueSnackbar("Unable to obtain data", { variant: "error" });
-        return []; 
+        console.log(error + "erro no get do kanban");
+        return [];
       }
     },
   });
 
-  const onDragEnd = (result: {
+  const { mutateAsync } = useMutation({
+    mutationFn: async (task: IItem) => {
+      await KanbanServices.updateItemPosition(task);
+    },
+    onSuccess: () => {
+      console.log("salvo com sucesso"),
+        {
+          variant: "success",
+        };
+    },
+    onError: () => {
+      const errorMessage = "não foi possível enviar dados"!;
+      console.log(errorMessage);
+    },
+  });
+
+  const onDragEnd = async (result: {
     destination: DraggableLocation | null;
     source: DraggableLocation;
     draggableId: string;
@@ -79,6 +75,10 @@ export const Kanban: React.FC = () => {
         draggadItem = sourceColumnItems[i];
       }
     }
+
+    // Atualiza o column_id do item arrastado
+    draggadItem.column_id = result.destination?.droppableId;
+
     //exclui o objeto arrastado
     var filterSourceColumnItems = sourceColumnItems.filter(
       (item: IItem) => item.id != result.draggableId
@@ -100,6 +100,16 @@ export const Kanban: React.FC = () => {
       columnsCopy[sourceColumnId].items = filterSourceColumnItems;
       columnsCopy[destinationColumnId].items = destinationColumnItemns;
       setColumns(columnsCopy);
+    }
+
+    console.log("🚀 ~ draggadItem:", draggadItem);
+
+    // Envia a atualização para o back-end
+    try {
+      await mutateAsync(draggadItem);
+      refetch();
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -129,15 +139,21 @@ export const Kanban: React.FC = () => {
           }}
         >
           {/* COLUNAS */}
-          {/* {isLoading && <>carregando....</>} */}
-          {columns.map((column) => (
-            <Column
-              key={column.id}
-              title={column.title}
-              id={column.id}
-              items={column.items}
-            />
-          ))}
+          {isLoading && (
+            <>
+              <h3>carregando....</h3>
+            </>
+          )}
+
+          {!isLoading &&
+            columns.map((column) => (
+              <Column
+                key={column.id}
+                title={column.title}
+                id={column.id}
+                items={column.items}
+              />
+            ))}
         </Box>
       </DragDropContext>
     </Box>
