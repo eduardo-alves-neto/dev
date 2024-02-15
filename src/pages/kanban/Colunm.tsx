@@ -1,5 +1,5 @@
 // Coluna.tsx
-import { Box, Typography, Paper, Button } from "@mui/material";
+import { Box, Typography, Paper, Button, Icon } from "@mui/material";
 import { Droppable } from "@hello-pangea/dnd";
 import { Task } from "./Task";
 import { IItem } from "./types";
@@ -12,7 +12,6 @@ interface IColumnProps {
 
 export const Column: React.FC<IColumnProps> = ({ title, id, items }) => {
   const getListStyle = (isDraggingOver: boolean) => ({
-    background: isDraggingOver ? "lightblue" : "lightgrey",
     padding: 2,
     width: 300,
     minHeight: 400,
@@ -22,7 +21,8 @@ export const Column: React.FC<IColumnProps> = ({ title, id, items }) => {
 
   return (
     <Box sx={{ width: 350, margin: 2 }} key={id}>
-      <Typography variant="h6" gutterBottom component="div">
+      <Typography  sx={{fontSize:"20px"}} gutterBottom component="div">
+
         {title}
       </Typography>
 

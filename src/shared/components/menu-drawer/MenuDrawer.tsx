@@ -19,6 +19,8 @@ import { Home } from "@mui/icons-material";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import PaymentsIcon from "@mui/icons-material/Payments";
+import GroupIcon from "@mui/icons-material/Group";
+import ViewKanbanIcon from '@mui/icons-material/ViewKanban';
 
 interface IListItemLink {
   children?: ReactNode;
@@ -100,7 +102,11 @@ export const MenuDrawer: React.FC<IMenuDrawerProps> = ({ children }) => {
                 onClick={smDown ? toggleDrawerOpen : undefined}
               />
               <ListItemLink
-                icon={<Icon>Home</Icon>}
+                icon={
+                  <Icon>
+                    <GroupIcon />
+                  </Icon>
+                }
                 label="Users"
                 to="/users"
                 onClick={smDown ? toggleDrawerOpen : undefined}
@@ -129,7 +135,7 @@ export const MenuDrawer: React.FC<IMenuDrawerProps> = ({ children }) => {
               <ListItemLink
                 icon={
                   <Icon>
-                    <PaymentsIcon />
+                    <ViewKanbanIcon />
                   </Icon>
                 }
                 label="Kanban"

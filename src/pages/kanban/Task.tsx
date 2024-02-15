@@ -1,5 +1,5 @@
 // Tarefa.tsx
-import { Box, Typography } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import { Draggable } from "@hello-pangea/dnd";
 import { IItem } from "./types";
 
@@ -21,14 +21,20 @@ export const Task: React.FC<ITaskProps> = ({ task, index }) => {
           <Box
             sx={{
               width: "90%",
-              height: 100,
-              backgroundColor: "", 
+              minHeight: 200,
+              maxHeight: 300,
+              backgroundColor: "#4682B4",
               margin: 1,
               padding: 1,
-              borderRadius: 2, 
+              borderRadius: 2,
             }}
           >
-            <Typography sx={{ color: "yellow" }}>{task.title}</Typography>
+            <Box sx={{ marginY:1}}>
+              <Typography sx={{color:"yellow", fontSize:"22px"}}>
+                {task.title}
+              </Typography>
+              <Divider sx={{borderBottom:1}}/>
+            </Box>
             {task.content}
           </Box>
         </Box>

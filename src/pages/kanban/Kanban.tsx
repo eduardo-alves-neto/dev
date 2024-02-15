@@ -114,7 +114,7 @@ export const Kanban: React.FC = () => {
   };
 
   return (
-    <Box sx={{ padding: 2, border: "1px solid red" }}>
+    <Box sx={{ padding: 2}}>
       <DragDropContext onDragEnd={onDragEnd}>
         <Box
           sx={{
